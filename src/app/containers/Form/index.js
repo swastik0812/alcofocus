@@ -48,7 +48,7 @@ const validate = (values) => {
     errors.DOB = "Requried";
   } else if (moment().diff(moment(values.DOB, "DD-MM-YYYY"), "years") < 18) {
     errors.DOB = "Age can't be less than 18";
-  }else if (moment().diff(moment(values.Dob, "DD-MM-YYYY"),"years") >40) {
+  }else if (moment().diff(moment(values.DOB, "DD-MM-YYYY"),"years") > 40) {
     errors.DOB = "Age can't be greater then 40";
   }
 
