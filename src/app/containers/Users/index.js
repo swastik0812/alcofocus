@@ -11,6 +11,17 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import axios from "axios";
 import moment from "moment";
+import Avatar from "@material-ui/core/Avatar";
+
+function _arrayBufferToBase64(buffer) {
+  var binary = "";
+  var bytes = new Uint8Array(buffer);
+  var len = bytes.byteLength;
+  for (var i = 0; i < len; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return window.btoa(binary);
+}
 
 const mockApi = () =>
   new Promise((resolve) => {
@@ -79,6 +90,7 @@ export default function UserTable() {
               <TableCell align="left">Email</TableCell>
               <TableCell align="left">Phone Number</TableCell>
               <TableCell align="left">Date Of Birth</TableCell>
+              <TableCell align="left">Image</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -89,6 +101,18 @@ export default function UserTable() {
                 <TableCell align="left">{row.phoneNumber}</TableCell>
                 <TableCell align="left">
                   {moment(row.DOB).format("LL")}
+                </TableCell>
+                <TableCell align="left">
+                  {row.photo ? (
+                    <Avatar
+                      alt="User image"
+                      src={`data:image/png;base64,${_arrayBufferToBase64(
+                        row.photo.data
+                      )}`}
+                    />
+                  ) : (
+                    <Avatar>{row.name[0]}</Avatar>
+                  )}
                 </TableCell>
               </TableRow>
             ))}

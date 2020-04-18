@@ -11,14 +11,16 @@ import moment from "moment";
 import axios from "axios";
 import { Formik } from "formik";
 import { useHistory } from "react-router-dom";
-
+import * as _ from "lodash";
+   
 const initialValues = {
-  name: "",
+  name:"",
   email: "",
   phoneNumber: "",
   DOB: null,
+  photo:undefined,
 };
-
+    
 const validate = (values) => {
   const errors = {};
   if (!values.name) {
@@ -46,6 +48,12 @@ const validate = (values) => {
     errors.DOB = "Requried";
   } else if (moment().diff(moment(values.DOB, "DD-MM-YYYY"), "years") < 18) {
     errors.DOB = "Age can't be less than 18";
+  }else if (moment().diff(moment(values.Dob, "DD-MM-YYYY"),"years") >40) {
+    errors.DOB = "Age can't be greater then 40";
+  }
+
+  if(!values.photo) {
+    errors.photo = "Required";
   }
 
   return errors;
@@ -64,15 +72,21 @@ export default function SignUp() {
           "YYYY-MM-DD[T00:00:00.000Z]"
         ),
       };
+      const requestFormData =new FormData();
+
+      for(const keyName in data){
+        requestFormData.append(keyName, data[keyName]);
+      }
+      
       setLoading(true);
 
       const apiResponse = await axios.post(
         "https://alcofocus-task.herokuapp.com/users",
-        data,
+        requestFormData,
         {
           headers: {
             // "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -178,6 +192,39 @@ export default function SignUp() {
                       }}
                     />
                   </Grid>
+                  <Grid item xs={12}>
+                    <input
+                    accept="image/*"
+                    style={{display:"none"}}
+                    id="raised-button-file"
+                    multiple
+                    type="file"
+                      onChange={(event)=>{
+                        formikProps.setFieldValue(
+                          "photo",
+                          event.target.files[0]
+                          );
+                      }
+                    }
+                    name="photo"
+                      />
+                      <label htmlFor="raised-button-file">
+                        <Button
+                        component="span"
+                        fullWidth
+                        color={"primary"}
+                        variant="outlined"
+                        style={{
+                          borderColor: errors.photo ? "red" :undefined,
+                        }}
+                        >upload profile image
+                        </Button>
+                      </label>
+                      <Typography variant="caption" display="block">
+                        {_.get(values.photo, "name","")}
+                      </Typography>
+                      </Grid>
+                      
                   <Grid item xs={12}>
                     <DatePicker
                       variant="outlined"
