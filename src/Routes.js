@@ -5,14 +5,13 @@ import {
   Route,
   HashRouter,
 } from "react-router-dom";
-import { Form, Users } from "./app/containers";
+import { Demo } from "./app/containers";
 
 export default function Routes() {
   return (
     <HashRouter>
       <Switch>
-        <Route exact path="/" component={Form} />
-        <Route exact path="/users" component={Users} />
+        <Route exact path="/" component={Demo} />
       </Switch>
     </HashRouter>
   );
